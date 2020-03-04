@@ -2,6 +2,12 @@ package todo_app.todo_app.domain;
 
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +23,7 @@ import lombok.Data;
 public class Task{
 
     @Id
-    @GeneratedValue(strategy=GenerationType.Auto) //GeneratedValueを使って主キーにユニークな値を自動で生成し、@Idを持つフィルドに適用できます。
+    @GeneratedValue(strategy = GenerationType.AUTO) //GeneratedValueを使って主キーにユニークな値を自動で生成し、@Idを持つフィルドに適用できます。
     Integer id;
 
     String subject;

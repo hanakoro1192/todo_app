@@ -16,7 +16,8 @@ public class TaskForm{
 
     String subject; //登録フォームのタスクを入れるフィールド
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Date
+    TimeFormat(pattern = "yyyy-MM-dd")
     LocalDate deadLine; //登録フォームの期日を入れるフィールド
 
     Boolean hasDone; //タスクが完了したのかの状態を入れる論理型のフィールド

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import ch.qos.logback.core.helpers.Transform;
+import todo_app.todo_app.domain.Task;
 import todo_app.todo_app.form.TaskForm;
 import todo_app.todo_app.service.TodoService;
 
@@ -31,10 +32,10 @@ public class ToWedController{
     //タスクの全件取得
     @GetMapping(value = "/tasks") //@RequestMappingのGETリクエスト用のアノテーションが@GetMappingです。記述の省略と可読性の向上が目的です。
     public ModelAndView readAllTasks(){
-        TaskForm form = createInitialForm();
+        TaskForm form = createInitialForm(); //オブジェクト生成の初期メソッド呼び出し
         ModelAndView modelAndView = toTasksPage();  //readAllTasksメソッドを用いることでthymeleafで作成するhtmlの画面へ繊維を行う
         modelAndView.addObject("form", form);
-        List<Task> tasks = todoService.findAllTasks();
+        List<Task> tasks = todoService.findAllTasks(); //データベースからデータを取得
         modelAndView.addObject(TASKS, tasks);
         return modelAndView;
     }
@@ -98,6 +99,7 @@ public class ToWedController{
     @PutMapping(value = "/task/{id}") //PutMappingのvalue属性にURLのパスを含めるidを指定する。id=1のとき、putのhttpメソッドでtask/1のリクエストを受けるとupdateOneTaskメソッドへルーティングを行う
     public ModelAndView updateOneTask(@PathVariable Integer id, @ModelAttribute TaskForm form){ //引数に@PathVariableアノテーションを指定し、変数名をidと揃えることでURLのパスからidの値を取得可能,登録データで入力したデータをTaskFormクラスのオブジェクトで受け取ることができる
         updateTask(id, form); //ThymeleafのtaskId変数経由で受け取ったidと登録フォームに入力されたデータを登録する.
+        return null;
     }
 
     private void updateTask(Integer id, TaskForm form){
@@ -109,6 +111,18 @@ public class ToWedController{
     }
 
     //タスクを1件削除
+    @DeleteMapping(value = "tasks/{id}")
+    public ModelAndView deleteOneTask(@PathVariable Integer id){
+        deleteTask(id); //idを利用してタスクがデータベースに登録されているのかを確認する。登録されている場合にタスクの削除を行い、readAllTasksメソッドへリダイレクトする
+        return new ModelAndView(REDIRECT_TO);
+    }
+
+    private void deleteTask(Integer id){
+        Optional<Task> task = todoService.findOneTask(id);
+        if(task.isPresent()){
+            todoService.deleteTask(id);
+        }
+    }
 
 
 }
