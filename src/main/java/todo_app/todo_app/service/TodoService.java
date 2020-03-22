@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import todo_app.todo_app.domain.Task;
 import todo_app.todo_app.repository.TodoRepository;
 
+//主にTodoRepositotyにエラーが多く存在する
 //リポジトリを用いてデータ操作する実装
 @Service
 public class TodoService{
